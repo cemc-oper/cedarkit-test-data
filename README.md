@@ -1,24 +1,24 @@
 # cedarkit-test-data
 
-测试数据下载工具，为 cedarkit 系列工具套件提供测试数据准备功能。
+A test data downloader that prepares test datasets for the cedarkit toolkits.
 
-## 安装
+## Installation
 
 ```bash
 pip install -e .
 ```
 
-## 使用方法
+## Usage
 
-### 命令行
+### Command line
 
-从 WIS 下载 GFS 数据：
+Download GFS data from WIS:
 
 ```bash
 cedarkit-test-data download gfs --source wis --output ./data
 ```
 
-从本地挂载目录复制数据：
+Copy data from a locally mounted directory:
 
 ```bash
 cedarkit-test-data download gfs --source music-dir --storage-base M: --output ./data
@@ -30,18 +30,22 @@ cedarkit-test-data download gfs --source music-dir --storage-base M: --output ./
 from cedarkit_test_data import download_gfs_data
 from pathlib import Path
 
-# 下载到指定目录
+# Download to a target directory
 download_gfs_data(
     output_dir=Path("./data"),
     source="wis",
 )
 ```
 
-## 支持的数据源
+## Supported data sources
 
-- `wis`: 从 CMA WIS 数据服务下载
-- `music-dir`: 从本地挂载的 music-dir 目录复制
+- `wis`: download from the CMA WIS data service
+- `music-dir`: copy from a locally mounted music-dir directory
 
-## 支持的数据类型
+## Supported data types
 
-- `gfs`: CMA GRAPES-GFS 全球模式数据
+- `gfs`: CMA GRAPES-GFS global model data
+
+## License
+
+Licensed under the [Apache License, Version 2.0](LICENSE).
