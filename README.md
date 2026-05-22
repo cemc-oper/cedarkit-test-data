@@ -1,4 +1,4 @@
-# cedarkit-test-tool
+# cedarkit-test-data
 
 测试数据下载工具，为 cedarkit 系列工具套件提供测试数据准备功能。
 
@@ -15,19 +15,19 @@ pip install -e .
 从 WIS 下载 GFS 数据：
 
 ```bash
-cedarkit-test-tool download gfs --source wis --output ./data
+cedarkit-test-data download gfs --source wis --output ./data
 ```
 
 从本地挂载目录复制数据：
 
 ```bash
-cedarkit-test-tool download gfs --source music-dir --storage-base M: --output ./data
+cedarkit-test-data download gfs --source music-dir --storage-base M: --output ./data
 ```
 
 ### Python API
 
 ```python
-from cedarkit_test_tool import download_gfs_data
+from cedarkit_test_data import download_gfs_data
 from pathlib import Path
 
 # 下载到指定目录

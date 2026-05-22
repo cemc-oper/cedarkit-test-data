@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "cedarkit-test-tool"
+name = "cedarkit-test-data"
 description = "Test data downloader for cedarkit toolkits"
 readme = "README.md"
 license = {file = "LICENSE"}
@@ -36,14 +36,14 @@ dev = [
 ]
 
 [project.scripts]
-cedarkit-test-tool = "cedarkit_test_tool.cli:main"
+cedarkit-test-data = "cedarkit_test_data.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/cemc-oper/cedarkit-test-tool"
+Homepage = "https://github.com/cemc-oper/cedarkit-test-data"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["cedarkit_test_tool*"]
+include = ["cedarkit_test_data*"]
 
 [tool.setuptools_scm]
-version_file = "cedarkit_test_tool/_version.py"
+version_file = "cedarkit_test_data/_version.py"

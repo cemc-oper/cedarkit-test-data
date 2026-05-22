@@ -1,5 +1,5 @@
 """
-Command line interface for cedarkit-test-tool.
+Command line interface for cedarkit-test-data.
 """
 from pathlib import Path
 
@@ -12,7 +12,7 @@ from .downloader import download_gfs_data
 @click.group()
 @click.version_option()
 def main():
-    """cedarkit-test-tool: Test data downloader for cedarkit toolkits."""
+    """cedarkit-test-data: Test data downloader for cedarkit toolkits."""
     pass
 
 

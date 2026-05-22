@@ -29,4 +29,4 @@ data/
 htmlcov/
 
 # version
-cedarkit_test_tool/_version.py
+cedarkit_test_data/_version.py
