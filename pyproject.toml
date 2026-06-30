@@ -30,8 +30,8 @@ dependencies = [
 ]
 dynamic = ["version"]
 
-[project.optional-dependencies]
-dev = [
+[dependency-groups]
+test = [
     "pytest>=7.0",
 ]
 

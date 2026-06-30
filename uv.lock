@@ -26,8 +26,8 @@ dependencies = [
     { name = "tqdm" },
 ]
 
-[package.optional-dependencies]
-dev = [
+[package.dev-dependencies]
+test = [
     { name = "pytest", version = "8.4.2", source = { registry = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple/" }, marker = "python_full_version < '3.10'" },
     { name = "pytest", version = "9.0.3", source = { registry = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple/" }, marker = "python_full_version >= '3.10'" },
 ]
@@ -36,12 +36,13 @@ dev = [
 requires-dist = [
     { name = "click", specifier = ">=8.0" },
     { name = "pandas", specifier = ">=1.5" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0" },
     { name = "pyyaml", specifier = ">=6.0" },
     { name = "requests", specifier = ">=2.28" },
     { name = "tqdm", specifier = ">=4.64" },
 ]
-provides-extras = ["dev"]
+
+[package.metadata.requires-dev]
+test = [{ name = "pytest", specifier = ">=7.0" }]
 
 [[package]]
 name = "certifi"
