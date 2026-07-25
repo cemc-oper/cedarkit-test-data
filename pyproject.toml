@@ -27,6 +27,7 @@ dependencies = [
     "pandas>=1.5",
     "pyyaml>=6.0",
     "tqdm>=4.64",
+    "reki",
 ]
 dynamic = ["version"]
 
@@ -47,3 +48,6 @@ include = ["cedarkit_test_data*"]
 
 [tool.setuptools_scm]
 version_file = "cedarkit_test_data/_version.py"
+
+[tool.uv.sources]
+reki = { path = "../reki", editable = true }

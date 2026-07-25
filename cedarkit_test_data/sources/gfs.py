@@ -4,11 +4,9 @@ GFS data sources.
 import shutil
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
 
 import pandas as pd
-import requests
-from tqdm import tqdm
+from reki.sources.url import download_file, file_name_from_url
 
 from .base import DataSource
 
@@ -47,13 +45,9 @@ class GfsWisSource(DataSource):
         **kwargs,
     ) -> Path:
         file_url = self.get_file_path_or_url(start_time, forecast_time)
-        
-        parsed_url = urlparse(file_url)
-        path = parsed_url.path
-        file_name = path.rstrip('/').split('/')[-1]
-        file_path = output_dir / file_name
+        file_path = output_dir / file_name_from_url(file_url)
 
-        self._download_file(url=file_url, file_path=file_path)
+        download_file(file_url, file_path)
         return file_path
 
     def get_metadata(
@@ -70,20 +64,6 @@ class GfsWisSource(DataSource):
             "forecast_time": forecast_time.isoformat(),
             "source": "wis",
         }
-
-    @staticmethod
-    def _download_file(url: str, file_path: Path) -> None:
-        file_name = file_path.name
-        response = requests.head(url)
-        total_size = int(response.headers.get('content-length', 0))
-
-        with requests.get(url, stream=True) as r, open(file_path, 'wb') as f, tqdm(
-            total=total_size, unit='B', unit_scale=True, desc=file_name
-        ) as progress_bar:
-            for chunk in r.iter_content(chunk_size=1024):
-                if chunk:
-                    f.write(chunk)
-                    progress_bar.update(len(chunk))
 
 
 class GfsMusicDirSource(DataSource):
