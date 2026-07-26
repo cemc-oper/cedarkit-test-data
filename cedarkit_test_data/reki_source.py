@@ -49,6 +49,9 @@ class TestSource(Source):
     #: not a pytest test class despite the name.
     __test__ = False
 
+    #: fetching the dataset is remote I/O; defer it to first use.
+    remote = True
+
     def __init__(
             self,
             dataset_name: str = "gfs",
