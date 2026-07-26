@@ -1255,6 +1255,7 @@ requires-dist = [
     { name = "importlib-metadata", marker = "python_full_version < '3.8'" },
     { name = "jinja2" },
     { name = "numpy" },
+    { name = "nuwe-cmadaas", marker = "extra == 'cmadaas'", editable = "../../source/nuwe-cmadaas-devel/repo/nuwe-cmadaas-python" },
     { name = "pandas" },
     { name = "protobuf", marker = "extra == 'godas'" },
     { name = "pyyaml" },
@@ -1263,7 +1264,7 @@ requires-dist = [
     { name = "tqdm" },
     { name = "xarray" },
 ]
-provides-extras = ["godas"]
+provides-extras = ["godas", "cmadaas"]
 
 [package.metadata.requires-dev]
 cov = [
@@ -1272,6 +1273,7 @@ cov = [
 ]
 test = [
     { name = "cedarkit-test-data", editable = "." },
+    { name = "nuwe-cmadaas", editable = "../../source/nuwe-cmadaas-devel/repo/nuwe-cmadaas-python" },
     { name = "pytest" },
 ]
 
