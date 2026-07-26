@@ -37,6 +37,23 @@ download_gfs_data(
 )
 ```
 
+### reki `test` source
+
+Once cedarkit-test-data is installed, it registers a `test` source in the
+`reki.sources` entry point group, so test datasets can be loaded through
+reki's unified entry point:
+
+```python
+import reki
+
+# fetch (or reuse) the GFS test file and open it as a GRIB reader
+data = reki.from_source("test", "gfs", output_dir="./data")
+field = data.to_xarray(parameter="t", level_type="pl", level=850)
+```
+
+Downloads are idempotent: an existing file in `output_dir` is reused and
+no network access happens.
+
 ## Supported data sources
 
 - `wis`: download from the CMA WIS data service

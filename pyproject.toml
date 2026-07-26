@@ -39,6 +39,9 @@ test = [
 [project.scripts]
 cedarkit-test-data = "cedarkit_test_data.cli:main"
 
+[project.entry-points."reki.sources"]
+test = "cedarkit_test_data.reki_source:TestSource"
+
 [project.urls]
 Homepage = "https://github.com/cemc-oper/cedarkit-test-data"
 
