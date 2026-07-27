@@ -3,7 +3,7 @@
 This module is registered in the ``reki.sources`` entry point group,
 so ``reki.from_source("test", "gfs", ...)`` works once cedarkit-test-data
 is installed. reki itself does not depend on this package; the source is
-discovered at runtime (see ``doc/reki-future-development.md`` §9.1).
+discovered at runtime.
 """
 
 import tempfile
