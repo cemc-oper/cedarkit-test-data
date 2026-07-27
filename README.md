@@ -1,5 +1,11 @@
 # cedarkit-test-data
 
+![Maturity-Sandbox](https://img.shields.io/badge/Maturity-Sandbox-F9D71C)
+![GitHub Release](https://img.shields.io/github/v/release/cemc-oper/cedarkit-test-data)
+![PyPI - Version](https://img.shields.io/pypi/v/cedarkit-test-data)
+![GitHub License](https://img.shields.io/github/license/cemc-oper/cedarkit-test-data)
+![GitHub Action Workflow Status](https://github.com/cemc-oper/cedarkit-test-data/actions/workflows/ci.yaml/badge.svg)
+
 A test data downloader that prepares test datasets for the cedarkit toolkits.
 
 ## Installation
