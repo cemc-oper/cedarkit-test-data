@@ -1,0 +1,4 @@
+# Python dependencies for scripts/generate_ifs.py.
+# Also required on PATH: cdo and ecCodes tools (grib_copy, grib_ls) —
+# install via system packages (apt install cdo libeccodes-tools) or conda.
+ecmwf-opendata

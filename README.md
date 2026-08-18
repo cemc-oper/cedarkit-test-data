@@ -1,125 +1,96 @@
 # cedarkit-test-data
 
-![Maturity-Archived](https://img.shields.io/badge/Maturity-Archived-FE7D37)
-
 > [!IMPORTANT]
-> This project has been archived and is no longer maintained.
-> It is kept available for historical reference.
+> **This repository has changed purpose.** It is no longer a Python
+> package — it is now the **data-generation project and release-asset
+> store** for frozen test datasets used by the
+> [cedarkit](https://github.com/cemc-oper/cedarkit) /
+> [reki](https://github.com/cemc-oper/reki) documentation and tests.
 >
-> Its functionality has been merged into [cemc-oper/reki](https://github.com/cemc-oper/reki)
-> (the built-in `test` source in `reki/sources/test.py` and the `reki-test-data`
-> command). Please use `reki` instead — see "Migrating to reki" below.
->
-> If this package remains installed alongside a newer `reki`, its
-> `reki.sources` entry point shadows reki's built-in `test` source;
-> uninstall it with `pip uninstall cedarkit-test-data`.
+> - The old installable package is archived on the
+>   [`legacy/test-data-package`](https://github.com/cemc-oper/cedarkit-test-data/tree/legacy/test-data-package)
+>   branch. **Do not `pip install` it**: its `reki.sources` entry point
+>   shadows reki's built-in `test` source. Its functionality was merged
+>   into reki (built-in `test` source + `reki-test-data` CLI).
+> - The actual data files are **GitHub release assets**, not files in
+>   this repo. See [Releases](https://github.com/cemc-oper/cedarkit-test-data/releases).
 
-## Migrating to reki
+## What this repository is
 
-The `test` source is built into `reki`; no plugin installation is needed.
+1. **Generation scripts** (`scripts/`) that produce small, frozen test
+   datasets from ECMWF IFS open data (CC-BY-4.0).
+2. **Release assets**: each data version is published as a GitHub
+   release tagged with an independent calver (`v<year>.<month>.<rev>`,
+   e.g. `v2026.8.0`), decoupled from reki releases. Data semantics
+   (model / domain / run date / forecast step) live in the asset file
+   names, not in the version number.
 
-Python API — unchanged call, works out of the box:
+## Data inventory
+
+Asset naming: `ifs_<domain>_<run-date><run-time>_f<step>.grib2`
+
+| Asset | Model | Run | Step | Parameters | Domain | Intended use |
+|---|---|---|---|---|---|---|
+| `ifs_eastasia_2026081800_f024.grib2` | ECMWF IFS HRES 0.25° | 2026-08-18 00Z | +24h | 2t, 2d, 10u, 10v, msl, tp | 0–60N, 60–150E | read / plot examples |
+| `ifs_global_2026081800_f024.grib2` | ECMWF IFS HRES 0.25° | 2026-08-18 00Z | +24h | 2t | global | regrid / area operator examples |
+
+## Using the data
+
+The recommended entry point is reki's built-in `test` source
+(`ecmwf_ifs` dataset), which downloads from the release URL and opens
+the file in one call:
 
 ```python
 import reki
 
-# fetch (or reuse) the GFS test file and open it as a GRIB reader
-data = reki.from_source("test", "gfs", output_dir="./data")
-field = data.to_xarray(parameter="t", level_type="pl", level=850)
+ds = reki.from_source("test", "ecmwf_ifs")           # frozen East-Asia subset
+field = ds.sel(parameter="2t", level_type="heightAboveGround", level=2).to_xarray()
 ```
 
-Command line — `cedarkit-test-data` becomes `reki-test-data`:
+or the CLI:
 
 ```bash
-# before
-cedarkit-test-data download gfs --source wis --output ./data
-
-# after
-reki-test-data download gfs --source wis --output ./data
+reki-test-data download ecmwf_ifs --domain eastasia -o ./data
 ```
 
-The downloader API moved from `cedarkit_test_data` to `reki.sources.test`:
+Direct release-URL reference (advanced):
 
-```python
-# before
-from cedarkit_test_data import download_gfs_data
-
-# after
-from reki.sources.test import download_gfs_data
+```
+https://github.com/cemc-oper/cedarkit-test-data/releases/download/v2026.8.0/ifs_eastasia_2026081800_f024.grib2
 ```
 
----
+## Regenerating the data
 
-*The sections below are kept for historical reference.*
-
-![GitHub Release](https://img.shields.io/github/v/release/cemc-oper/cedarkit-test-data)
-![PyPI - Version](https://img.shields.io/pypi/v/cedarkit-test-data)
-![GitHub License](https://img.shields.io/github/license/cemc-oper/cedarkit-test-data)
-![GitHub Action Workflow Status](https://github.com/cemc-oper/cedarkit-test-data/actions/workflows/ci.yaml/badge.svg)
-
-A test data downloader that prepares test datasets for the cedarkit toolkits.
-
-## Installation
+ECMWF open data only keeps the last few run cycles, so regeneration
+means: pick a current run, pin it in the script, generate, tag, release.
 
 ```bash
-pip install -e .
+python -m venv .venv && .venv/bin/pip install -r requirements.txt
+# also required on PATH: cdo, grib_copy, grib_ls (apt install cdo libeccodes-tools)
+
+# pin DATE/TIME/STEP in scripts/generate_ifs.py first, then:
+.venv/bin/python scripts/generate_ifs.py --output-dir build
+
+git commit -am "data: regenerate IFS assets (<run date>)"
+git tag v<yyyy>.<m>.<rev>
+git push origin main --tags
+scripts/upload_release.sh v<yyyy>.<m>.<rev> build/ifs_*.grib2
 ```
 
-## Usage
+Then bump the URL constant in reki (`reki/sources/test.py`,
+`ECMWF_IFS_RELEASE_TAG` / `ECMWF_IFS_ASSETS`) via a reviewable PR.
 
-### Command line
+## License and attribution
 
-Download GFS data from WIS:
+- The **scripts** in this repository are under the repository's
+  original license (see [LICENSE](LICENSE)).
+- The **data assets** contain modified ECMWF IFS open data,
+  © ECMWF, licensed under
+  [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/).
+  See [NOTICE](NOTICE). When using the data, attribute ECMWF.
 
-```bash
-cedarkit-test-data download gfs --source wis --output ./data
-```
+## Historical note
 
-Copy data from a locally mounted directory:
-
-```bash
-cedarkit-test-data download gfs --source music-dir --storage-base M: --output ./data
-```
-
-### Python API
-
-```python
-from cedarkit_test_data import download_gfs_data
-from pathlib import Path
-
-# Download to a target directory
-download_gfs_data(
-    output_dir=Path("./data"),
-    source="wis",
-)
-```
-
-### reki `test` source
-
-Once cedarkit-test-data is installed, it registers a `test` source in the
-`reki.sources` entry point group, so test datasets can be loaded through
-reki's unified entry point:
-
-```python
-import reki
-
-# fetch (or reuse) the GFS test file and open it as a GRIB reader
-data = reki.from_source("test", "gfs", output_dir="./data")
-field = data.to_xarray(parameter="t", level_type="pl", level=850)
-```
-
-Downloads are idempotent: an existing file in `output_dir` is reused and
-no network access happens.
-
-## Supported data sources
-
-- `wis`: download from the CMA WIS data service
-- `music-dir`: copy from a locally mounted music-dir directory
-
-## Supported data types
-
-- `gfs`: CMA GRAPES-GFS global model data
-
-## License
-
-Licensed under the [Apache License, Version 2.0](LICENSE).
+Releases up to `v2026.7.0` (and PyPI package `cedarkit-test-data`) were
+the old Python test-data package; see the `legacy/test-data-package`
+branch. Data releases start at `v2026.8.0`.

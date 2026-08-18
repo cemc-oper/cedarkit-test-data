@@ -1,0 +1,36 @@
+name: validate
+
+# Optional CI (decision D6): run the generation script (without
+# publishing) to verify it has not rotted. Low frequency — manual
+# trigger plus pushes that touch the scripts.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/**"
+      - "requirements.txt"
+      - ".github/workflows/validate.yml"
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install system dependencies (cdo, ecCodes)
+        run: sudo apt-get update && sudo apt-get install -y cdo libeccodes-tools
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run generation script (no publish)
+        run: python scripts/generate_ifs.py --output-dir build
+
+      - name: Show generated assets
+        run: ls -lh build/ && sha256sum build/*

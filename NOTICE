@@ -1,0 +1,5 @@
+This product contains modified data from the ECMWF IFS (open data set),
+© European Centre for Medium-Range Weather Forecasts (ECMWF),
+licensed under CC-BY-4.0 (https://creativecommons.org/licenses/by/4.0/).
+Source: https://www.ecmwf.int/en/forecasts/datasets/open-data
+Modifications: subset of parameters and domain.
